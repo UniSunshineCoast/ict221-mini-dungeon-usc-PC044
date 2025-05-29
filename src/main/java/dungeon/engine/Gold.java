@@ -7,14 +7,15 @@ public class Gold implements MapEntity {
         return "G";
     }
 
+    //Gold bars = 2 points
     @Override
-    public String interact(Player player) {
+    public String interaction(Player player) {
         player.addScore(2);
-        return  "You just picked up some Gold.";
+        return  "You found some Gold. You stash this for later. \n[Score + 2]";
     }
 
     @Override
-    public boolean isBlocking() {
+    public boolean playerBlocking() {
         return false;
     }
 }

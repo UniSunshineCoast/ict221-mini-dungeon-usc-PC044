@@ -8,12 +8,13 @@ public class Wall implements MapEntity {
     }
 
     @Override
-    public String interact(Player player) {
-        return "You tried to move, but there is a wall in your way.";
+    public String interaction(Player player) {
+        return "There seems to be a wall in your way. Can't move there.";
     }
 
+    //WALLS are the ONLY entities that BLOCK
     @Override
-    public boolean isBlocking() {
+    public boolean playerBlocking() {
         return true;
     }
 }

@@ -2,6 +2,7 @@ package dungeon.engine;
 
 public class Ladder implements MapEntity {
 
+    //Boolean determines whether the current level is the FINAL level
     private final boolean isFinalLevel;
 
     public Ladder(boolean isFinalLevel) {
@@ -13,19 +14,21 @@ public class Ladder implements MapEntity {
         return "L";
     }
 
+    //Two ladder states; Default: isFinalLevel = False
+    //If the player is at the final level and reaches ladder = game end
     @Override
-    public String interact(Player player) {
+    public String interaction(Player player) {
         if (isFinalLevel) {
             player.setFinished(true);
-            return "";
+            //ELSE keep going onto the next level
         } else {
             player.setAdvanceToNextLevel(true);
-            return "You found a ladder! Advancing to the next level...";
         }
+        return "";
     }
 
     @Override
-    public boolean isBlocking() {
+    public boolean playerBlocking() {
         return false;
     }
 }

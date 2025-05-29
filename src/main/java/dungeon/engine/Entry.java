@@ -8,12 +8,12 @@ public class Entry implements MapEntity {
     }
 
     @Override
-    public String interact(Player player) {
-        return "You are at the entrance";
+    public String interaction(Player player) {
+        return "The entrance has seemingly shut and locked you in, forward is the only option";
     }
 
     @Override
-    public boolean isBlocking() {
+    public boolean playerBlocking() {
         return false;
     }
 }

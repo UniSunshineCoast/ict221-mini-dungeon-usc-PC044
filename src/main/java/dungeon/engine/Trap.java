@@ -7,14 +7,15 @@ public class Trap implements MapEntity {
         return "T";
     }
 
+    //Spike Trap = -2 HP
     @Override
-    public String interact(Player player) {
+    public String interaction(Player player) {
         player.changeHP(-2);
-        return  "You just stepped on a trap and lost 2 HP.";
+        return  "A spike trap activated under your feet. \n[HP - 2]";
     }
 
     @Override
-    public boolean isBlocking() {
+    public boolean playerBlocking() {
         return false;
     }
 }

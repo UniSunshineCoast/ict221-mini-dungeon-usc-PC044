@@ -7,14 +7,15 @@ public class HealthPotion implements MapEntity {
         return "H";
     }
 
+    //Health Potions = +4 health points
     @Override
-    public String interact(Player player) {
+    public String interaction(Player player) {
         player.changeHP(+4);
-        return "You picked up a health potion and restored 4 HP.";
+        return "You pick up a health potion and drink it. \n[HP restored by 4]";
     }
 
     @Override
-    public boolean isBlocking() {
+    public boolean playerBlocking() {
         return false;
     }
 }

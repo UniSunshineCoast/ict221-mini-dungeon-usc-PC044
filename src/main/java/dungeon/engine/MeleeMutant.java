@@ -7,15 +7,16 @@ public class MeleeMutant implements MapEntity {
         return "M";
     }
 
+    //MeleeMutants deal 2 DMG + Give score of 2 points
     @Override
-    public String interact(Player player) {
+    public String interaction(Player player) {
         player.addScore(2);
         player.changeHP(-2);
-        return "You attacked a melee mutant and won.";
+        return "You come across a mutant with a sword. You fight and win. \n[Score + 2] \n[HP - 2]";
     }
 
     @Override
-    public boolean isBlocking() {
+    public boolean playerBlocking() {
         return false;
     }
 }

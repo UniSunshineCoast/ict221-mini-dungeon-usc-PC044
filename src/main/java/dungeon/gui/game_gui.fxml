@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dungeon.gui.Controller">
+<BorderPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dungeon.gui.Controller">
     <padding>
         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
     </padding>
@@ -13,6 +14,13 @@
 
         </GridPane>
     </center>
+   <right>
+      <Pane prefHeight="610.0" prefWidth="363.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button layoutX="156.0" layoutY="47.0" mnemonicParsing="false" text="Button" />
+            <TextArea layoutX="72.0" layoutY="466.0" prefHeight="200.0" prefWidth="200.0" />
+         </children></Pane>
+   </right>
 
 
 </BorderPane>
