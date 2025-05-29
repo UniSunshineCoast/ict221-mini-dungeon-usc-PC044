@@ -73,8 +73,25 @@ public class GameEngine {
             return "You found a ladder and advanced to level " + currentLevel + "!";
         }
 
+        // Each movement corresponds to a string describing direction
+        String movementDirection = switch (direction.toLowerCase()) {
+            case "u" -> "up";
+            case "d" -> "down";
+            case "l" -> "left";
+            case "r" -> "right";
+            default -> "unknown direction";
+        };
+
         //display all interactions after each move
-        return "\nYou moved to " + newX + "," + newY + ".\n" + message + "\n" + rangedMutantAttacks;
+        String result = "[You moved " + movementDirection + " one step.]\n" + "----------------------\n" + message;
+
+        if (!message.isEmpty() && !rangedMutantAttacks.isEmpty()) {
+            result += "\n";  // Add newline only if both have content
+        }
+
+        result += rangedMutantAttacks;
+
+        return result;
     }
 
     //method for calculating all ranged mutants on map if in range of player
@@ -97,7 +114,7 @@ public class GameEngine {
     }
 
     //populate the map with selected entities (based on difficulty)
-    private void populateMap(int difficulty) {
+    public void populateMap(int difficulty) {
         boolean isFinalLevel = currentLevel == FINAL_LEVEL;
         placeEntity(new Entry(), 0, map.length - 1); // Bottom-left corner
 
@@ -264,16 +281,15 @@ public class GameEngine {
             String result = engine.movePlayer(movement);
             System.out.println(result);
 
-            if (engine.getPlayer().isFinished()) {
-                System.out.println("You reached the final ladder and won!");
-                ScoreManager scoreManager = new ScoreManager();
-                scoreManager.addScore(engine.getPlayer().getScore());
-                break;
-            } else if (engine.getPlayer().isDead()) {
-                System.out.println("You died! Game over.");
-                break;
-            } else if (engine.getPlayer().isOutOfSteps()) {
-                System.out.println("You've run out of steps! Game over.");
+            String endGame = engine.getPlayer().endGameMessage();
+
+            if (endGame != null) {
+                System.out.println(endGame);
+                if (engine.getPlayer().isFinished()) {
+                    ScoreManager scoreManager = new ScoreManager();
+                    scoreManager.addScore(engine.getPlayer().getScore());
+                    break;
+                }
                 break;
             }
         }

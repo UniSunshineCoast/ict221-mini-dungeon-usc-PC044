@@ -33,6 +33,7 @@ public class RangedMutant implements MapEntity {
         if (inRange) {
             if (random.nextBoolean()) { //Randomises True or False values for 50% chance
                 player.changeHP(-2);
+                player.setCauseOfDeath("Ranged Mutant");
                 return "A ranged mutant shot you with an arrow. \n[HP - 2]";
             } else {
                 return "A ranged mutant shot an arrow narrowly missing you.";

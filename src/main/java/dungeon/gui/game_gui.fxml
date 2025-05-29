@@ -4,7 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dungeon.gui.Controller">
+<BorderPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dungeon.gui.Controller" style="-fx-background-image: url('/dungeon_background.jpg'); -fx-background-size: cover;
+                   -fx-background-repeat: no-repeat;">
     <padding>
         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
     </padding>
@@ -15,11 +16,20 @@
         </GridPane>
     </center>
    <right>
-      <Pane prefHeight="610.0" prefWidth="363.0" BorderPane.alignment="CENTER">
+      <Pane prefHeight="483.0" prefWidth="297.0" BorderPane.alignment="CENTER">
          <children>
-            <Button layoutX="156.0" layoutY="47.0" mnemonicParsing="false" text="Button" />
-            <TextArea layoutX="72.0" layoutY="466.0" prefHeight="200.0" prefWidth="200.0" />
-         </children></Pane>
+            <Button layoutX="207.0" layoutY="87.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="69.0" text="Save" />
+            <TextArea fx:id="textArea" wrapText="true" layoutX="23.0" layoutY="268.0" prefHeight="236.0" prefWidth="249.0" />
+            <Button layoutX="207.0" layoutY="120.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="69.0" text="Load" />
+            <Button fx:id="upButton" layoutX="62.0" layoutY="44.0" mnemonicParsing="false" onAction="#movePlayerUp" prefHeight="37.0" prefWidth="61.0" text="Up" />
+            <Button fx:id="leftButton" layoutX="11.0" layoutY="87.0" mnemonicParsing="false" onAction="#movePlayerLeft" prefHeight="37.0" prefWidth="61.0" text="Left" />
+            <Button fx:id="rightButton" layoutX="111.0" layoutY="87.0" mnemonicParsing="false" onAction="#movePlayerRight" prefHeight="37.0" prefWidth="61.0" text="Right" />
+            <Button fx:id="downButton" layoutX="62.0" layoutY="132.0" mnemonicParsing="false" onAction="#movePlayerDown" prefHeight="37.0" prefWidth="61.0" text="Down" />
+            <Button layoutX="23.0" layoutY="516.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" text="Help" onAction="#helpScreen"/>
+            <Button layoutX="196.0" layoutY="50.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Start Game" />
+            <TextField fx:id="statusBar" editable="false" layoutX="23.0" layoutY="229.0" prefHeight="25.0" prefWidth="248.0" />
+         </children>
+      </Pane>
    </right>
 
 

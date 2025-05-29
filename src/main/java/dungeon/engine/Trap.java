@@ -11,6 +11,7 @@ public class Trap implements MapEntity {
     @Override
     public String interaction(Player player) {
         player.changeHP(-2);
+        player.setCauseOfDeath("Spike Trap");
         return  "A spike trap activated under your feet. \n[HP - 2]";
     }
 

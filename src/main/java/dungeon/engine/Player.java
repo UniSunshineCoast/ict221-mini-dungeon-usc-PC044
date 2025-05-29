@@ -10,6 +10,7 @@ public class Player {
     private static final int maxSteps = 100; //End-game setup (Out of Steps)
     private boolean finished;
     private boolean advanceToNextLevel;
+    private String causeOfDeath;
 
     //Set Player with initial position (X,Y) coordinates
     public Player(int startX, int startY) {
@@ -21,7 +22,25 @@ public class Player {
     public void moveTo(int newX, int newY) {
         this.x = newX;
         this.y = newY;
-        steps++; //Count steps for entire game
+    }
+
+    public String endGameMessage() {
+        if (isFinished()) {
+            return "You found the way out of the Dungeon! You run off with all the gold you stole.";
+        } else if (isDead()) {
+            return "You bled to death. This is Game Over.\nYou were killed by " + causeOfDeath + "!";
+        } else if (isOutOfSteps()) {
+            return "You've become too tired and collapsed. You took too many steps. Game Over.";
+        }
+        return null;
+    }
+
+    public void setCauseOfDeath(String cause) {
+        this.causeOfDeath = cause;
+    }
+
+    public String getCauseOfDeath() {
+        return causeOfDeath;
     }
 
     //Player changes HP based on event - MAX HP gain = 10

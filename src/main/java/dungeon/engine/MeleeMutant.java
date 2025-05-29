@@ -12,7 +12,8 @@ public class MeleeMutant implements MapEntity {
     public String interaction(Player player) {
         player.addScore(2);
         player.changeHP(-2);
-        return "You come across a mutant with a sword. You fight and win. \n[Score + 2] \n[HP - 2]";
+        player.setCauseOfDeath("Melee Mutant");
+        return "You come across a mutant with a sword. You fight and win. \n[Score + 2] [HP - 2]";
     }
 
     @Override
