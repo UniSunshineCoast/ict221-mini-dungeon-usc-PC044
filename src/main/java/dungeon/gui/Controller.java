@@ -93,7 +93,7 @@ public class Controller {
         int health = engine.getPlayer().getHealth();
         int score = engine.getPlayer().getScore();
         int steps = engine.getPlayer().getSteps();
-        statusBar.setText("Health: " + health + "    Score: " + score + "    Steps: " + steps);
+        statusBar.setText("\u2764 Health: " + health + "    \uD83D\uDC63 Score: " + score + "   \uD83C\uDFC6 Steps: " + steps);
     }
 
     private void updateGui() {
@@ -152,6 +152,7 @@ public class Controller {
         return createLabel(" ");
     }
 
+    //new imageview that is the size of each cell (75x75)
     private ImageView createImageView(String imagePath) {
         Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
         ImageView imageView = new ImageView(image);
@@ -220,13 +221,14 @@ public class Controller {
                         You have a limited number of steps before you get tired and pass out! [Max = 100 steps]
                         
                         The game ends when:
-                        - Your health reaches 0
-                        - You run out of steps
-                        - You reach the final ladder"""
+                        - Your health reaches 0 (Death)
+                        - You run out of steps (Exhaustion)
+                        - You reach the final ladder (Escape)"""
         );
         alert.showAndWait();
     }
 
+    //save game button saves to file using engine class
     @FXML
     private void saveGame() {
         try {
@@ -238,6 +240,7 @@ public class Controller {
         }
     }
 
+    //load game from file name, update the map, re-enable buttons
     @FXML
     private void loadGame() {
         try {

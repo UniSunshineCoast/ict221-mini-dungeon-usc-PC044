@@ -20,7 +20,7 @@
            <Button fx:id="saveButton" layoutX="207.0" layoutY="87.0" mnemonicParsing="false" prefHeight="25.0"
                    prefWidth="69.0" text="Save" onAction="#saveGame"/>
            <TextArea fx:id="textArea" editable="false" wrapText="true" layoutX="23.0" layoutY="268.0" prefHeight="236.0"
-                     prefWidth="249.0"/>
+                     prefWidth="249.0" style="-fx-control-inner-background: #DEDEDE;"/>
            <Button fx:id="loadButton" layoutX="207.0" layoutY="120.0" mnemonicParsing="false" prefHeight="25.0"
                    prefWidth="69.0" text="Load" onAction="#loadGame"/>
            <Button fx:id="upButton" layoutX="62.0" layoutY="44.0" mnemonicParsing="false" onAction="#movePlayerUp"
@@ -36,7 +36,7 @@
            <Button fx:id="startButton" layoutX="196.0" layoutY="50.0" mnemonicParsing="false" prefHeight="25.0"
                    prefWidth="92.0" text="Start Game" onAction="#startUp"/>
            <TextField fx:id="statusBar" editable="false" layoutX="23.0" layoutY="229.0" prefHeight="25.0"
-                      prefWidth="248.0"/>
+                      prefWidth="248.0" style="-fx-control-inner-background: #DEDEDE;"/>
        </Pane>
    </right>
 
