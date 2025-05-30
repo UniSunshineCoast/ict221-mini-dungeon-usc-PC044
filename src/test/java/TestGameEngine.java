@@ -10,6 +10,4 @@ public class TestGameEngine {
 
         assertEquals(10, ge.getSize());
     }
-
-
 }

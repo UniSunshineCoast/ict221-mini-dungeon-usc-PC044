@@ -13,8 +13,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
-import java.io.*;
-
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 

@@ -83,6 +83,7 @@ public class GameEngine implements Serializable {
         return displayPlayerResult(direction, message, rangedMutantAttacks);
     }
 
+    //displays what happens after every movement
     private static String displayPlayerResult(String direction, String message, String rangedMutantAttacks) {
         String movementDirection = switch (direction.toLowerCase()) {
             case "u" -> "up";
@@ -95,6 +96,7 @@ public class GameEngine implements Serializable {
         //display all interactions after each move
         String result = "[You moved " + movementDirection + " one step.]\n" + "----------------------\n" + message;
 
+        //if both messages have content then place a new line in between them (readability)
         if (!message.isEmpty() && !rangedMutantAttacks.isEmpty()) {
             result += "\n";  // Add newline only if both have content
         }

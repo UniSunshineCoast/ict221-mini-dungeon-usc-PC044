@@ -16,6 +16,6 @@ public class TestMeleeMutant {
 
         assertEquals(8, player.getHealth());
         assertEquals(2, player.getScore());
-        assertEquals("You come across a mutant with a sword. You fight and win. \n[Score + 2] \n[HP - 2]", result);
+        assertEquals("You come across a mutant with a sword. You fight and win. \n[Score + 2] [HP - 2]", result);
     }
 }
