@@ -46,17 +46,19 @@ public class ScoreManager {
     }
 
     //Add score and local time to List. Save Files, then print top scores.
-    public void addScore(int score) {
+    public ScoreRecord addScore(int score) {
         ScoreRecord newRecord = new ScoreRecord(score, LocalDate.now());
         scores.add(newRecord);
         Collections.sort(scores); // sort by score descending
         saveScores();
         printTopScores();
         printRank(newRecord);
+
+        return newRecord;
     }
 
     //Print ONLY top 5 scores. (The rest will be in txt.file)
-    private void printTopScores() {
+    public void printTopScores() {
         System.out.println("\n--- Top Scores ---");
         for (int i = 0; i < Math.min(5, scores.size()); i++) {
             ScoreRecord s = scores.get(i);
@@ -65,8 +67,23 @@ public class ScoreManager {
     }
 
     //Print what rank you came on scoreboard (1st, 2nd, 3rd etc.)
-    private void printRank(ScoreRecord record) {
+    public void printRank(ScoreRecord record) {
         int rank = scores.indexOf(record) + 1;
         System.out.println("\nYour final score: " + record.getScore() + " (Rank #" + rank + ")");
+    }
+
+    //combines top scores and print for controller - returns as STRING
+    public String controllerTopScore(ScoreRecord record, int count) {
+        StringBuilder sb = new StringBuilder("--- Top Scores ---\n");
+        for (int i = 0; i < Math.min(count, scores.size()); i++) {
+            ScoreRecord s = scores.get(i);
+            sb.append(i + 1).append(". ").append(s.toString()).append("\n");
+        }
+
+        int rank = scores.indexOf(record) + 1;
+        sb.append("\nYour final score: ").append(record.getScore())
+                .append(" (Rank #").append(rank).append(")");
+
+        return sb.toString();
     }
 }

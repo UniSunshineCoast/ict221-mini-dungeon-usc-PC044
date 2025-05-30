@@ -1,6 +1,8 @@
 package dungeon.engine;
 
-public class Player {
+import java.io.Serializable;
+
+public class Player implements Serializable {
     private int x; //Player Coordinates
     private int y;
     private int hp = 10;
@@ -28,12 +30,23 @@ public class Player {
         if (isFinished()) {
             return "You found the way out of the Dungeon! You run off with all the gold you stole.";
         } else if (isDead()) {
-            return "You bled to death. This is Game Over.\nYou were killed by " + causeOfDeath + "!";
+            return "You bled to death. This is Game Over.\nYou were killed by " + getCauseOfDeath() + "!";
         } else if (isOutOfSteps()) {
             return "You've become too tired and collapsed. You took too many steps. Game Over.";
         }
         return null;
     }
+
+    public String startGameMessage() {
+        return """
+                This is the MiniDungeon, do you have what it takes? \
+                
+                Reach the end with your highest score\
+                
+                Move your player to start! Click help for more info.""";
+
+    }
+
 
     public void setCauseOfDeath(String cause) {
         this.causeOfDeath = cause;

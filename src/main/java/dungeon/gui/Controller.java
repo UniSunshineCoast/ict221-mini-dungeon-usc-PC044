@@ -2,6 +2,8 @@ package dungeon.gui;
 
 import dungeon.engine.Cell;
 import dungeon.engine.GameEngine;
+import dungeon.engine.ScoreManager;
+import dungeon.engine.ScoreRecord;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -11,7 +13,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
+import java.io.*;
+
 import java.util.Map;
+import java.util.Objects;
 
 public class Controller {
     @FXML public Button upButton;
@@ -21,15 +26,28 @@ public class Controller {
     @FXML public TextArea textArea;
     @FXML private GridPane gridPane;
     @FXML private TextField statusBar;
+    @FXML private Button startButton;
+    @FXML private Button saveButton;
+    @FXML private Button loadButton;
 
     GameEngine engine;
+    private final String SAVE_FILE = "game_save.dat";
 
     @FXML
     public void initialize() {
+        disableMovementButtons(true);
+        textArea.setText("Click Start to start the game!");
+    }
+
+    @FXML
+    public void startUp() {
         engine = new GameEngine(10);
         engine.populateMap(3); //Using the populateMap method created in GameEngine
         gridPane.setGridLinesVisible(true);
+        disableMovementButtons(false);
         updateGui();
+        textArea.setText(engine.getPlayer().startGameMessage());
+        startButton.setText("Restart");
     }
 
     //Player Movement methods on button click
@@ -135,17 +153,18 @@ public class Controller {
     }
 
     private ImageView createImageView(String imagePath) {
-        Image image = new Image(getClass().getResourceAsStream(imagePath));
+        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(50);
-        imageView.setFitHeight(50);
+        imageView.setFitWidth(75);
+        imageView.setFitHeight(75);
         return imageView;
     }
 
+    //all labels will have this border and size, sizes the boxes (even nulls)
     private Label createLabel(String text) {
         Label label = new Label(text);
         label.setStyle("-fx-font-size: 20; -fx-alignment: center; -fx-border-color: #708090;");
-        label.setMinSize(50, 50);
+        label.setMinSize(75, 75);
         return label;
     }
 
@@ -155,17 +174,25 @@ public class Controller {
 
         if (endGame != null) {
             textArea.setText(endGame);
+            disableMovementButtons(true);
+            if (engine.getPlayer().isFinished()) {
+                ScoreManager scoreManager = new ScoreManager();
+                ScoreRecord record = scoreManager.addScore(engine.getPlayer().getScore());
+                textArea.setText(scoreManager.controllerTopScore(record, 5));
+            }
             return true;
         }
         return false;
     }
 
     //disable the selected buttons when triggered [Endgame Setup]
-    private void disableAllButtons() {
-        upButton.setDisable(true);
-        downButton.setDisable(true);
-        leftButton.setDisable(true);
-        rightButton.setDisable(true);
+    private void disableMovementButtons(boolean state) {
+        upButton.setDisable(state);
+        downButton.setDisable(state);
+        leftButton.setDisable(state);
+        rightButton.setDisable(state);
+        saveButton.setDisable(state);
+        loadButton.setDisable(state);
     }
 
     //method using ALERT to create pop-ups on the screen. Help information describing the game.
@@ -175,22 +202,52 @@ public class Controller {
         alert.setTitle("MiniDungeon Information");
         alert.setHeaderText("How to play MiniDungeon?");
         alert.setContentText(
-                "Objective:\n" +
-                        "- You have been trapped in the Dungeon! Find your way out and find the ladder to escape!\n\n" +
-                        "Controls:\n" +
-                        "- Use Up, Down, Left, Right buttons on the GUI to move your player in the desired direction.\n\n" +
-                        "Rules:\n" +
-                        "- Avoid mutants. There are two kinds of mutants, melee and ranged.\n Melee mutants fight back when you " +
-                        "arrive on their tile and you lose 2HP.\n Ranged mutants shoot from a distance of two blocks " +
-                        "and you lose 2HP\n" +
-                        "- There are gold bars scattered around the dungeon. Pick up the gold to increase your score [+2 Score].\n" +
-                        "- Watch your health! Pick up potions to recover health. [Health +4].\n" +
-                        "You have a limited number of steps before you get tired and pass out! [Max = 100 steps]\n\n" +
-                        "The game ends when:\n" +
-                        "- Your health reaches 0\n" +
-                        "- You run out of steps\n" +
-                        "- You reach the final ladder"
+                """
+                        Objective:
+                        - You have been trapped in the Dungeon! Find your way out and find the ladder to escape!
+                        
+                        Controls:
+                        - Use Up, Down, Left, Right buttons on the GUI to move your player in the desired direction.
+                        
+                        Rules:
+                        - Avoid mutants. There are two kinds of mutants, melee and ranged.
+                         Melee mutants fight back when you \
+                        arrive on their tile and you lose 2HP.
+                         Ranged mutants shoot from a distance of two blocks \
+                        and you lose 2HP
+                        - There are gold bars scattered around the dungeon. Pick up the gold to increase your score [+2 Score].
+                        - Watch your health! Pick up potions to recover health. [Health +4].
+                        You have a limited number of steps before you get tired and pass out! [Max = 100 steps]
+                        
+                        The game ends when:
+                        - Your health reaches 0
+                        - You run out of steps
+                        - You reach the final ladder"""
         );
         alert.showAndWait();
+    }
+
+    @FXML
+    private void saveGame() {
+        try {
+            engine.saveGame(new File(SAVE_FILE));
+            textArea.setText("You have saved successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            textArea.setText("Unable to Save. Something went wrong.");
+        }
+    }
+
+    @FXML
+    private void loadGame() {
+        try {
+            engine = GameEngine.loadGame(new File(SAVE_FILE));
+            disableMovementButtons(false);
+            updateGui();
+            textArea.setText("Game loaded successfully from previous save.");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            textArea.setText("Unable to Load. Something went wrong.");
+        }
     }
 }

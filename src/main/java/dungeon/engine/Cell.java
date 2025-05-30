@@ -3,42 +3,29 @@ package dungeon.engine;
 import javafx.scene.layout.StackPane;
 
 public class Cell extends StackPane {
+    private final CellData cellData;
 
-    private MapEntity entity;
+    public Cell(CellData cellData) {
+        this.cellData = cellData;
+    }
 
-    public Cell() {}
-
-    //Common interaction method for each cell
     public String interact(Player player) {
-        if (entity != null) {
-            String message = entity.interaction(player);
-            // REPLACE ONE-TIME tiles after interacting with 'nothing'
-            // Initialize persistent tiles (DON'T remove)
-            if (!(entity instanceof Trap || entity instanceof Wall || entity instanceof Ladder)) {
-                entity = null;
-            }
-            return message;
-        }
-        return "";
+        return cellData.interact(player);
     }
 
-    //Getter & Setter
-    //Return true if the cell has entity + can block the player
     public boolean isBlocking() {
-        return entity != null && entity.playerBlocking();
+        return cellData.isBlocking();
     }
 
-    //Symbols for null cells are '.' ; Symbols for entities are their attributed class symbol
     public String getSymbol() {
-        return entity == null ? "." : entity.getSymbol();
+        return cellData.getSymbol();
     }
 
     public void setEntity(MapEntity entity) {
-        this.entity = entity;
+        cellData.setEntity(entity);
     }
 
     public MapEntity getEntity() {
-        return entity;
+        return cellData.getEntity();
     }
-
 }

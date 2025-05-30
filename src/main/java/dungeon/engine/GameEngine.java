@@ -1,25 +1,31 @@
 package dungeon.engine;
 
 import javafx.scene.text.Text;
+
+import java.io.*;
 import java.util.Random;
 import java.util.Scanner;
 
-public class GameEngine {
+public class GameEngine implements Serializable {
 
-    private Cell[][] map;
-    private Player player;
+    private transient Cell[][] map; //transient property means it won't be serialized
+    private CellData[][] mapData; //all data is placed here for saving and loading
+    private final Player player;
     private int currentLevel = 1;
     private static final int FINAL_LEVEL = 2; //The game features 2 levels
 
     //Creates a square game board. @param size the width and height.
     public GameEngine(int size) {
         map = new Cell[size][size];
+        mapData = new CellData[size][size];
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                Cell cell = new Cell();
+                CellData data = new CellData();
+                Cell cell = new Cell(data);
                 Text text = new Text(i + "," + j);
                 cell.getChildren().add(text);
+                mapData[i][j] = data;
                 map[i][j] = cell;
             }
         }
@@ -68,12 +74,16 @@ public class GameEngine {
 
         if (player.isAdvanceToNextLevel()) {
             currentLevel++; //go up one level
-            generateNewMap(currentLevel * 2); //need to change difficulty by +2 on new map
+            createNextMap(currentLevel * 2); //need to change difficulty by +2 on new map
             player.setAdvanceToNextLevel(false); // reset since player has reached last level
             return "You found a ladder and advanced to level " + currentLevel + "!";
         }
 
         // Each movement corresponds to a string describing direction
+        return displayPlayerResult(direction, message, rangedMutantAttacks);
+    }
+
+    private static String displayPlayerResult(String direction, String message, String rangedMutantAttacks) {
         String movementDirection = switch (direction.toLowerCase()) {
             case "u" -> "up";
             case "d" -> "down";
@@ -90,7 +100,6 @@ public class GameEngine {
         }
 
         result += rangedMutantAttacks;
-
         return result;
     }
 
@@ -115,7 +124,7 @@ public class GameEngine {
 
     //populate the map with selected entities (based on difficulty)
     public void populateMap(int difficulty) {
-        boolean isFinalLevel = currentLevel == FINAL_LEVEL;
+        boolean isFinalLevel = getCurrentLevel() == FINAL_LEVEL;
         placeEntity(new Entry(), 0, map.length - 1); // Bottom-left corner
 
         placeWalls();
@@ -131,6 +140,7 @@ public class GameEngine {
 
     //place entity at exact cell value
     private void placeEntity(MapEntity entity, int x, int y) {
+        mapData[y][x].setEntity(entity); //save to a serializable map
         map[y][x].setEntity(entity);
     }
 
@@ -144,6 +154,7 @@ public class GameEngine {
             int y = rand.nextInt(size);
 
             if (map[y][x].getEntity() == null && !(x == 0 && y == size - 1)) { //NO overlapping
+                mapData[y][x].setEntity(entity);
                 map[y][x].setEntity(entity);
                 count--;
             }
@@ -159,7 +170,7 @@ public class GameEngine {
                     {7, 3}, {7, 4}, {7, 5}, {7, 6}, {7, 7}
             };
             for (int[] coordinate : level1Walls) {
-                map[coordinate[1]][coordinate[0]].setEntity(new Wall());
+                placeEntity(new Wall(), coordinate[0], coordinate[1]);
             }
         } else if (currentLevel == 2) {
             int[][] level2Walls = {
@@ -168,17 +179,22 @@ public class GameEngine {
                     {7, 1}, {8, 2}, {8, 5}, {1, 1}, {1, 2}
             };
             for (int[] coordinate : level2Walls) {
-                map[coordinate[1]][coordinate[0]].setEntity(new Wall());
+                placeEntity(new Wall(), coordinate[0], coordinate[1]);
             }
         }
     }
 
     //new map for ladder trigger event
-    public void generateNewMap(int difficulty) {
+    public void createNextMap(int difficulty) {
         map = new Cell[getSize()][getSize()];
+        mapData = new CellData[getSize()][getSize()];
+
         for (int i = 0; i < getSize(); i++) {
             for (int j = 0; j < getSize(); j++) {
-                map[i][j] = new Cell();
+                CellData data = new CellData();
+                mapData[i][j] = data;
+
+                map[i][j] = new Cell(data);
             }
         }
         populateMap(difficulty);
@@ -221,6 +237,41 @@ public class GameEngine {
         return status.toString();
     }
 
+    //save the game (used in gui.controller)
+    public void saveGame(File file) throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+            oos.writeObject(this); 
+        }
+    }
+
+    //load game from selected file (used in gui.controller)
+    public static GameEngine loadGame(File file) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            GameEngine engine = (GameEngine) ois.readObject();
+            engine.loadMapFromData(); // Rebuild Map from saved data during engine process
+            return engine;
+        }
+    }
+
+    @Serial
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();  // deserialize non-transient fields like mapData
+
+        // Now rebuild the transient map from mapData
+        loadMapFromData();
+    }
+
+    //Recreate the whole map from the data saved in mapData
+    private void loadMapFromData() {
+        int size = mapData.length;
+        map = new Cell[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                map[i][j] = new Cell(mapData[i][j]);
+            }
+        }
+    }
+
     //Getter & Setter
     //Size of the current game. @return is both width and height.
     public int getSize() {
@@ -231,6 +282,7 @@ public class GameEngine {
         return currentLevel;
     }
 
+    //not used since we increment level by 1 instead of setting
     public void setCurrentLevel(int currentLevel) {
         this.currentLevel = currentLevel;
     }
@@ -263,8 +315,7 @@ public class GameEngine {
         engine.populateMap(difficulty); // User input difficulty
 
         System.out.printf("The size of map is %d * %d\n", engine.getSize(), engine.getSize());
-        System.out.println("This is the MiniDungeon, do you have what it takes? " +
-                "\nReach the end with your highest score");
+        System.out.println(engine.player.startGameMessage());
         while (true) {
             System.out.println("\nCurrent Map:");
             System.out.println(engine.renderMap());
