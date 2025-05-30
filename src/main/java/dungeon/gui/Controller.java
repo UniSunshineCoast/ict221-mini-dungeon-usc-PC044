@@ -35,7 +35,7 @@ public class Controller {
 
     @FXML
     public void initialize() {
-        disableMovementButtons(true);
+        disableAllButtons(true);
         textArea.setText("Click Start to start the game!");
     }
 
@@ -44,7 +44,7 @@ public class Controller {
         engine = new GameEngine(10);
         engine.populateMap(3); //Using the populateMap method created in GameEngine
         gridPane.setGridLinesVisible(true);
-        disableMovementButtons(false);
+        disableAllButtons(false);
         updateGui();
         textArea.setText(engine.getPlayer().startGameMessage());
         startButton.setText("Restart");
@@ -175,7 +175,7 @@ public class Controller {
 
         if (endGame != null) {
             textArea.setText(endGame);
-            disableMovementButtons(true);
+            disableAllButtons(true);
             if (engine.getPlayer().isFinished()) {
                 ScoreManager scoreManager = new ScoreManager();
                 ScoreRecord record = scoreManager.addScore(engine.getPlayer().getScore());
@@ -187,7 +187,7 @@ public class Controller {
     }
 
     //disable the selected buttons when triggered [Endgame Setup]
-    private void disableMovementButtons(boolean state) {
+    private void disableAllButtons(boolean state) {
         upButton.setDisable(state);
         downButton.setDisable(state);
         leftButton.setDisable(state);
@@ -245,7 +245,7 @@ public class Controller {
     private void loadGame() {
         try {
             engine = GameEngine.loadGame(new File(SAVE_FILE));
-            disableMovementButtons(false);
+            disableAllButtons(false);
             updateGui();
             textArea.setText("Game loaded successfully from previous save.");
         } catch (IOException | ClassNotFoundException e) {
