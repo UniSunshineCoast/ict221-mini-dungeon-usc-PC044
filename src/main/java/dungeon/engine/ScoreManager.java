@@ -69,7 +69,7 @@ public class ScoreManager {
     //Print what rank you came on scoreboard (1st, 2nd, 3rd etc.)
     public void printRank(ScoreRecord record) {
         int rank = scores.indexOf(record) + 1;
-        System.out.println("\nYour final score: " + record.getScore() + " (Rank #" + rank + ")");
+        System.out.println("\nFinal score: " + record.getScore() + " (You ranked #" + rank + " out of all records!)");
     }
 
     //combines top scores and print for controller - returns as STRING

@@ -225,7 +225,7 @@ public class GameEngine implements Serializable {
         int health = player.getHealth();
         int maxHealth = player.getMaxHealth();
         int score = player.getScore();
-        StringBuilder status = new StringBuilder("Health: [");
+        StringBuilder status = new StringBuilder("Health Points: [");
 
         for (int i = 0; i < maxHealth; i++) {
             if (i < health) {
@@ -235,7 +235,7 @@ public class GameEngine implements Serializable {
             }
         }
 
-        status.append("] ").append(health).append("/").append(maxHealth).append(" | Score: ").append(score);
+        status.append("] ").append(health).append("/").append(maxHealth).append(" ||| Score: ").append(score);
         return status.toString();
     }
 
@@ -297,7 +297,7 @@ public class GameEngine implements Serializable {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Choose your difficulty (1–10), default is 3: ");
+        System.out.print("Choose your difficulty (1 to 10), this will determine how hard the game is. Default is 3: ");
         String difficultyInput = scanner.nextLine().trim();
         int difficulty;
 
